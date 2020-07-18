@@ -134,7 +134,7 @@ function doHttpsRequest(url, options) {
 
 // 定时运行规则
 let rule = new schedule.RecurrenceRule();
-rule.minute = 20; // 每隔 20 分钟执行一次
+rule.minute = [0, 20, 40]; // 每隔 20 分钟执行一次
 
 // 启动任务
 schedule.scheduleJob(rule, () => {
