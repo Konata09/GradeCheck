@@ -2,9 +2,10 @@
 
 ### 设计思路  
 
-得到成绩查询页面的地址，使用 javaScript 脚本定时（为了避免 Session 过期，目前设定是 20 分钟）执行查询动作。  
+得到成绩查询页面的地址，使用 javaScript 脚本定时（默认定是 20 分钟）执行查询动作。  
 得到成绩后将所有成绩保存到文件，之后每次检查时进行比对，如果有新增的成绩就进行推送。  
 推送方案有多种选择，如方糖、Telegram Bot、邮件提醒、Bark 等。这里使用 [Bark](https://github.com/Finb/Bark) 进行推送。Bark 是一个十分简洁的 iOS 推送 App，利用 Apple 统一的推送通道，延迟很小，但不支持 Android 系统。Bark 也可以自已部署服务端，能保证隐私不被泄露。  
+服务端好像有定时强制注销用户的设定，即使一直访问也会出现需要登录的情况，可以先在网页端重新登录一次，SessionId 不需要修改。
 
 ### 安装使用  
 
@@ -25,7 +26,7 @@ export NODE_PATH=/usr/local/lib/nodejs/node-v12.18.2-linux-x64/lib/node_modules
 #### 安装 nodeJS 模块
 
 ``` sh
-npm install -g pm2 cheerio node-schedule
+npm install -g pm2 cheerio node-schedule iconv-lite
 ```
 
 #### 修改脚本
@@ -49,4 +50,10 @@ cd GradeCheck
 
 ``` sh
 pm2 start gradeCheck.js
+```
+
+查看日志
+
+``` sh
+pm2 logs gradeCheck
 ```
