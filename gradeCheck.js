@@ -1,5 +1,6 @@
 const http = require('http');
 const https = require('https');
+const iconv = require('iconv-lite');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const schedule = require('node-schedule');
@@ -30,19 +31,22 @@ var subject = {
     备注: '',
 };
 
-var html = '';
-
+var chunks = [];
 // 执行查询
 async function checkGrade() {
     console.log('开始查询: ' + new Date());
     let res = await doHttpRequest(url, options);
     console.log(`STATUS: ${res.statusCode}`);
-    res.setEncoding('utf8');
     res.on('data', (chunk) => {
-        // console.log(`BODY: ${chunk}`);
-        html = html.concat(chunk);
+        chunks = chunks.concat(chunk);
     });
     res.on('end', async () => {
+        let gbkhtml = iconv.decode(Buffer.concat(chunks), 'gbk');
+        if (gbkhtml.includes('请先登录') || gbkhtml.includes('非法')) {
+            console.log('session失效，请在网页端重新登录');
+            return;
+        }
+        let html = iconv.decode(Buffer.concat(chunks), 'utf-8');
         var result = await readLocalFile();  // 从本地文件读取之前的记录
         $ = cheerio.load(html);
         let trs = $('#dataList').children().children()  // 表格全部行
@@ -53,7 +57,7 @@ async function checkGrade() {
             } else {
                 let subjectOnce = deepCopy(subject);
                 let tds = tr.children();
-                let j = 1;  // 第一个单元格时序号 不需要
+                let j = 1;  // 第一个单元格是序号 不需要
                 for (let i in subjectOnce) {    // 将一条记录中每个字段存入对象
                     subjectOnce[i] = $(tds[j]).text()
                     j++;
@@ -68,7 +72,7 @@ async function checkGrade() {
                 if (sig) {
                     console.log('你有新的课程成绩' + JSON.stringify(subjectOnce));
                     await doHttpsRequest(`${pushUrl}/你有新的课程成绩/${subjectOnce.课程名称}   成绩:${subjectOnce.成绩}   学分:${subjectOnce.学分}`)   // Bark 推送
-                    result.push(subjectOnce);   // 加入将本条记录
+                    result.push(subjectOnce);   // 加入本条记录
                 }
             }
         }
