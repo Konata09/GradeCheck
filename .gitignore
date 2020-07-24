@@ -3,5 +3,6 @@ Thumbs.db
 db.json
 *.log
 node_modules/
-.deploy*/config.json
+.deploy*/
 *.bat
+config-test.json

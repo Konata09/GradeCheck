@@ -3,9 +3,9 @@ const iconv = require('iconv-lite');
 const cheerio = require('cheerio');
 const fs = require('fs');
 const schedule = require('node-schedule');
-const SocksProxyAgent = require(' ');
+const SocksProxyAgent = require('socks-proxy-agent');
 
-var conf = {
+let conf = {
     "site": "",
     "type": "",
     "xh": "",
@@ -15,7 +15,7 @@ var conf = {
     "proxy": ""
 }
 
-var subject_web_sample = {
+const subject_web_sample = {
     开课学期: '',
     课程编号: '',
     课程名称: '',
@@ -29,7 +29,7 @@ var subject_web_sample = {
     备注: '',
 };
 
-var subject_api_sample = {
+const subject_api_sample = {
     xqmc: '',   // 学期名称
     kcmc: '', // 课程名称
     kcywmc: '', // 课程英文名称
@@ -40,7 +40,7 @@ var subject_api_sample = {
     ksxzmc: '', // 考核方式
 };
 
-var agent = undefined;
+let agent = undefined;
 
 // 初始化 读取配置 设置定时任务
 async function init() {
@@ -199,7 +199,7 @@ async function readLocalFile(filename) {
         fs.readFile(filename, 'utf8', (err, data) => {
             if (err) reject(err);
             try {
-                var obj = JSON.parse(data);
+                let obj = JSON.parse(data);
                 resolve(obj);
             } catch (e) {
                 reject(e);
@@ -211,8 +211,8 @@ async function readLocalFile(filename) {
 
 // 对象深拷贝
 function deepCopy(obj) {
-    var target = {};
-    for (var key in obj)
+    let target = {};
+    for (let key in obj)
         if (Object.prototype.hasOwnProperty.call(obj, key))
             if (typeof obj[key] === 'object')
                 target[key] = deepCopy(obj[key]);
