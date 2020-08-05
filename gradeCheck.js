@@ -194,8 +194,8 @@ function doPush(courseName, grade, credit) {
 }
 
 // 读取 json 文件
-async function readLocalFile(filename) {
-    let data = await new Promise((resolve, reject) => {
+function readLocalFile(filename) {
+    return new Promise((resolve, reject) => {
         fs.readFile(filename, 'utf8', (err, data) => {
             if (err) reject(err);
             try {
@@ -206,7 +206,6 @@ async function readLocalFile(filename) {
             }
         });
     });
-    return data;
 }
 
 // 对象深拷贝
