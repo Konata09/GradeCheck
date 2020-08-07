@@ -73,7 +73,7 @@ async function checkFromApi() {
                 'User-Agent': 'Mozilla/5.0 (Winsdows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0',
                 'token': token
             },
-            timeout: 1000,
+            timeout: 5000,
             httpAgent: agent
         })
             .then(async (res) => {
@@ -114,7 +114,7 @@ async function checkFromWeb() {
             'User-Agent': 'Mozilla/5.0 (Winsdows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0',
             'Cookie': `JSESSIONID=${conf.JSESSIONID}`
         },
-        timeout: 1000,
+        timeout: 5000,
         responseType: 'arraybuffer',
         httpAgent: agent
     })
@@ -169,7 +169,7 @@ function apiLogin() {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Winsdows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0',
             },
-            timeout: 1000,
+            timeout: 5000,
             httpAgent: agent
         }).then((res) => {
             token = res.data.token;
@@ -189,7 +189,7 @@ function doPush(courseName, grade, credit) {
         headers: {
             'User-Agent': 'Mozilla/5.0 (Winsdows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0',
         },
-        timeout: 1000,
+        timeout: 5000,
     });
 }
 
